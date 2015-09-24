@@ -24,7 +24,7 @@ require([
 
         var map = new Map("map", {
             center: [-6.265, 53.345],
-            zoom: 13,
+            zoom: 5,
             basemap: "gray",
             logo:false, showAttribution:false
         });
@@ -52,8 +52,40 @@ require([
         function processData(d) {
 
             $.ajax({
+                type:"GET",
+                url: "https://api.jcdecaux.com/vls/v1/contracts?&apiKey=" + APIkeyDublinBike,
+                datatype:"json",
+                success: function(d){
+                    console.log(d)
+                    generateSelect(d);
+                },
+                error: function(e){
+                    console.log(e)
+
+                }
+            })
+
+        }
+
+        function generateSelect(list){
+
+            var select = document.getElementById("listCity");
+
+            for (var i = 0 ; i < list.length ; i ++){
+                var o = document.createElement("option");
+                o.text = list[i].name;
+                select.add(o);
+            }
+
+            select.addEventListener("change" , function(e){
+                generateLayer(select.value)
+            })
+        }
+
+        function generateLayer(city){
+            $.ajax({
                 type: "GET",
-                url: "https://api.jcdecaux.com/vls/v1/stations?contract=dublin&apiKey=" + APIkeyDublinBike,
+                url: "https://api.jcdecaux.com/vls/v1/stations?contract=" + city + "&apiKey=" + APIkeyDublinBike,
                 datatype: "json",
                 success: function(d){ getRealTimeData(d)},
                 error: function(e){console.log("error request JCdecaux API Data")}
@@ -63,7 +95,7 @@ require([
         }
 
         function getRealTimeData(json){
-console.log(json)
+            console.log(json)
             var layerDefinition = {
                 "displayFieldName": "Name",
                 "geometryType": "esriGeometryPoint",
