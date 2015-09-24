@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css"/>
+
+    <script type="text/javascript">
+        var rootPath = location.pathname.replace(/\/[^/]+$/, "");
+        dojoConfig = {
+            packages: [
+
+                { name: "myWidget", location: rootPath + "/widget" }
+
+
+            ]
+        };
+    </script>
+
+    <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+
+
+    <link rel="stylesheet" href="http://js.arcgis.com/3.14/esri/css/esri.css">
+    <script src="http://js.arcgis.com/3.14/"></script>
+
+    <style>
+        #map{
+            height:600px;
+            width:100%;
+        }
+        #dropZone{
+            height:200px;
+        }
+
+    </style>
+
+    <script>
+
+        require([
+                "esri/map",
+                "esri/layers/FeatureLayer",
+                "esri/request",
+                "esri/geometry/Point",
+                "esri/graphic",
+                "dojo/on",
+                "dojo/_base/array",
+
+                "myWidget/uploadWidget",
+                "esri/tasks/GeometryService",
+                "esri/tasks/ProjectParameters",
+                "esri/symbols/SimpleMarkerSymbol",
+                "esri/SpatialReference",
+                "esri/geometry/Circle",
+                "esri/layers/GraphicsLayer",
+                "esri/symbols/SimpleFillSymbol",
+
+                    "esri/tasks/FeatureSet",
+
+
+                "dojo/domReady!"
+
+            ],
+
+            function(
+                    Map,
+                    FeatureLayer,
+                    request,
+                    Point,
+                    Graphic,
+                    on,
+                    array,
+                    Uploader,
+                    GeometryService,
+                    ProjectParameters,
+                    SimpleMarkerSymbol,
+                    SpatialReference,
+                    Circle,
+                    GraphicsLayer,
+                    SimpleFillSymbol,
+
+                    FeatureSet
+
+                    ) {
+
+                var map = new Map("map", {
+                    center: [-6.265, 53.345],
+                    zoom: 14,
+                    basemap: "gray"
+                });
+                var APIkeyDublinBike = "cd68da53009a674d943220ef0a67623682aa00ce";
+                var data;
+                var currentSymbol = "http://static.arcgis.com/images/Symbols/Shapes/RedCircleLargeB.png";
+                var gsvc = new GeometryService("http://tasks.arcgisonline.com/ArcGIS/rest/services/Geometry/GeometryServer");
+                var myWg = new Uploader({ map: map }).placeAt(dojo.byId("dropZone"));
+                var symbol = new SimpleMarkerSymbol().setStyle("diamond");
+                var gl = new GraphicsLayer({id: "mygraphic"});
+                var symbol2 = new SimpleFillSymbol().setColor("#FF3333");
+                //var symbol2 = new SimpleFillSymbol().setColor("#FF3333").outline.setColor("#FF3333");
+
+                var curObj;
+                var listLoaded = false;
+
+                map.addLayer(gl);
+
+                myWg.changeSymbol(currentSymbol);
+
+                loadJQ();
+
+                function loadJQ(){
+
+                   
+                    $(document).ready(function(){
+					// load local CSV
+
+                        $.ajax({
+                            type: "GET",
+                            url : "data/Dublin.csv",
+                            datatype: "csv",
+                            success: function(data) {processData(data);}
+                        });
+
+                    });
+                }
+
+                function processData(d) {
+				
+					// display Local data static
+                    console.log(d);
+                    //myWg.processCSVData(d);
+
+					
+					// load dynamics Data
+                    $.ajax({
+                        type: "GET",
+                        url: "https://api.jcdecaux.com/vls/v1/stations?contract=dublin&apiKey=cd68da53009a674d943220ef0a67623682aa00ce",
+                        datatype: "json",
+                        success: function(d){ getRealTimeData(d)},
+                        error: function(e){console.log("error request JCdecaux API Data")}
+
+                    })
+
+                }
+
+                function getRealTimeData(json){
+
+//                    var layerDefinition = {
+//                    "displayFieldName":"Name",
+//                            "fieldAliases":{
+//                                "OBJECTID":"ObjectId",
+//                                "Date_":"timestamp",
+//                                "Magnitude":"Magnitude"
+//                    },
+//                    "geometryType":"esriGeometryPoint",
+//                            "spatialReference":{
+//                        "wkid":102100
+//                    },
+//                    "fields":[
+//                        {
+//                            "name":"OBJECTID",
+//                            "type":"esriFieldTypeOID",
+//                            "alias":"ObjectId"
+//                        },
+//                        {
+//                            "name":"Date_",
+//                            "type":"esriFieldTypeDate",
+//                            "alias":"timestamp",
+//                            "length":30
+//                        },
+//                        {
+//                            "name":"stand_available",
+//                            "type":"esriFieldTypeDouble",
+//                            "alias":"standAvailable"
+//                        }
+//                    ]};
+
+
+                    var layerDefinition = {
+                        "displayFieldName": "Name",
+                        "geometryType": "esriGeometryPoint",
+                        "spatialReference": {
+                            "wkid": 102100
+                        },
+                        "fields": [{
+                            "name": "ObjectID",
+                            "alias": "ObjectID",
+                            "type": "esriFieldTypeOID"
+                        }, {
+                            "name": "Name",
+                            "type": "esriFieldTypeString",
+                            "alias": "Name"
+                        }]
+                    }
+
+
+
+                    var jsonFS = {
+                        "geometryType": "esriGeometryPoint",
+                        "features": [
+                            {
+                                "attributes": {
+                                    "Name": "Point1",
+                                    "ObjectID": 1
+                                },
+                                "geometry": {
+                                    "x": -958520.3346958433,
+                                    "y": 7120873.555045171
+                                }
+                            },
+                            {
+                                "attributes": {
+                                    "Name": "Point2",
+                                    "ObjectID": 2
+                                },
+                                "geometry": {
+                                    "x": -803811.7894467209,
+                                    "y": 7122708.0437240143
+
+                                }
+                            },
+                            {
+                                "attributes": {
+                                    "Name": "Point3",
+                                    "ObjectID": 3
+                                },
+                                "geometry": {
+                                    "x": -782409.4215268819,
+                                    "y": 7208317.51540337
+
+                                }
+                            },
+                            {
+                                "attributes": {
+                                    "Name": "Point4",
+                                    "ObjectID": 4
+                                },
+                                "geometry": {
+                                    "x": -1017529.720531971,
+                                    "y": 7189666.8805017965
+
+                                }
+                            }
+                        ]
+                    };
+
+
+//                    var fs = new esri.tasks.FeatureSet(jsonFS);
+//                    var fsCollect = new esri.tasks.FeatureSet();
+//                    var featuresList = fs.features;
+                    var fs = new FeatureSet(jsonFS);
+                    var featureList = fs.features;
+
+
+                    var featureCollection = {
+                        layerDefinition: layerDefinition,
+                        featureSet: fs
+                    };
+
+                    var featureLayer = new FeatureLayer(featureCollection);
+                    map.addLayer(featureLayer);
+
+
+
+                    console.log(json);
+
+                    for(var i = 0 ; i < json.length ; i ++){
+                        var d = json[i];
+                        curObj = d;
+
+                        // add symbol
+                        var point = new Point(d.position.lng , d.position.lat, new SpatialReference({wkid:4326}));
+                        var graphic = new Graphic(point, symbol);
+                        //map.graphics.add(graphic);
+
+
+                        // Add circle
+                        var c = new Circle({
+                            center: point,
+                            radius:50
+                        });
+                        var graphicCirle = new Graphic(c, symbol2);
+                        gl.add(graphicCirle);
+
+                        if(i == json.length -1){
+                            drawing();
+                            listLoaded = true;
+                        }
+                    }
+
+                }
+
+                function drawing(){
+                    d3.selectAll("path").style("fill", "#FF3333").style("fill-opacity" , 1).on("click", function(d,i){
+//                        console.log(d3.select(this).attr("data-total"));
+//                        console.log(d3.select(this));
+//                        console.log(d3.select(this).attr("data-name"));
+                    });
+                }
+
+                on(gl, "graphic-draw",  function(evt){
+                    //console.log(curObj);
+
+                    if(!listLoaded){
+                        evt.node.setAttribute("data-total", curObj.bike_stands);
+                        evt.node.setAttribute("data-bike-stands-available", curObj.available_bikes_stands);
+                        evt.node.setAttribute("data-available-bikes", curObj.available_bikes);
+                        evt.node.setAttribute("data-time", curObj.last_update);
+                        evt.node.setAttribute("data-name", curObj.name);
+                    }
+
+                });
+        });
+
+
+
+    </script>
+</head>
+
+<body>
+
+<div id="map"></div>
+
+<div id="dropZone" >
+    <div>
+        Drop .CSV file here
+    </div>
+
+</div>
+
+</body>
+</html>
