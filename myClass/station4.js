@@ -22,9 +22,11 @@ require([
 
         ) {
 
+
+        var initZoom = 4;
         var map = new Map("map", {
             center: [-6.265, 53.345],
-            zoom: 5,
+            zoom: initZoom,
             basemap: "gray",
             logo:false, showAttribution:false
         });
@@ -32,6 +34,7 @@ require([
 
         var APIkeyDublinBike = "cd68da53009a674d943220ef0a67623682aa00ce";
         var data;
+        var featureLayer;
 
         loadJQ();
 
@@ -95,7 +98,13 @@ require([
         }
 
         function getRealTimeData(json){
-            console.log(json)
+
+            if(featureLayer){
+                featureLayer.clear();
+                map.removeLayer(featureLayer);
+                map.setZoom(initZoom)
+            }
+
             var layerDefinition = {
                 "displayFieldName": "Name",
                 "geometryType": "esriGeometryPoint",
@@ -168,7 +177,7 @@ require([
                 featureSet: fs
             };
 
-            var featureLayer = new FeatureLayer(featureCollection, {
+            featureLayer = new FeatureLayer(featureCollection, {
                 id:"featureJSON",
                 styling:false
 
@@ -191,8 +200,6 @@ require([
                 e.node.setAttribute("stroke-opacity",analyseOpacity(e.graphic.attributes));
 
                 d3.select(e.node).on("click", function(e){
-                    //console.log(this)
-                    //e.preventDefault();
                     d3.event.preventDefault();
                     generatePie(this);
                     displayData(this);
@@ -206,10 +213,7 @@ require([
             var b = data.bikeAvailable;
             var p = t + b;
             var u = (b * 100) / p;
-
             u = Math.round(u);
-
-console.log(Number( "0." + u))
             return Number( "0." + u);
         }
         function displayData(e){
