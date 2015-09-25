@@ -49,6 +49,9 @@
             border:1px dashed #A1A1A1;
             height:90%;
             width:100%;
+            -webkit-box-shadow: -1px 9px 18px 0px rgba(0,0,0,0.55);
+            -moz-box-shadow: -1px 9px 18px 0px rgba(0,0,0,0.55);
+            box-shadow: -1px 9px 18px 0px rgba(0,0,0,0.55);
         }
         #dropZone{
             height:200px;
@@ -73,11 +76,28 @@
 
         }
         #listCity{
+            width:100%;
             background-color: transparent;
         }
         #listCity option{
             background-color: #D1D1D1;
 
+        }
+        #listStation{
+            height:250px;
+            overflow-y: auto ;
+
+        }
+
+        #listStation span.list{
+            padding:3px;
+            float:left;
+            text-transform: capitalize;
+            width:100%;
+        }
+        #listStation span.list:hover{
+            background-color: #545454;
+            color: #e5e5e5;
         }
 
 
@@ -103,32 +123,48 @@
     </div>
 
     <div id="gradient"></div>
+</div>
+
+
 
     <div id="map"></div>
 
 
-    <div>
-        <form>
-            <select id="listCity">
-            </select>
-        </form>
-    </div>
+<div>
 
-    <h3>Click on a bike station</h3>
+    <div class="container">
 
-    <div class="col-sm-4">
-        <h4 ><i class="fa fa-bars"></i>  <span class="name">STATION NAME </span></h4>
-        <h4 class="bikes"></h4>
-        <h4 class="stands"></h4>
-        <h4 class="time"></h4>
-    </div>
-    <div class="col-sm-8">
-        <h4 class="text-center"><i class="fa fa-pie-chart"></i> OCCUPANCY </h4>
-        <div id="ipo" ></div>
-    </div>
+        <div class="col-sm-6">
+            <h3>Select a City</h3>
+            <form>
+                <select id="listCity">
+                </select>
+            </form>
+        </div>
 
+        <div class="col-sm-6">
+            <h3>Select a Station</h3>
+            <div id="listStation">
+
+            </div>
+
+        </div>
+
+        <h3>Click on a bike station</h3>
+
+        <div class="col-sm-4">
+            <h4 ><i class="fa fa-bars"></i>  <span class="name">STATION NAME </span></h4>
+            <h4 class="bikes"></h4>
+            <h4 class="stands"></h4>
+            <h4 class="time"></h4>
+        </div>
+        <div class="col-sm-8">
+            <h4 class="text-center"><i class="fa fa-pie-chart"></i> OCCUPANCY </h4>
+            <div id="ipo" ></div>
+        </div>
+
+    </div>
 </div>
-
 
 
 </body>

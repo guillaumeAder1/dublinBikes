@@ -5,6 +5,7 @@ require([
         "esri/geometry/Point",
         "esri/graphic",
         "dojo/on",
+        "dojo/_base/lang",
         "dojo/_base/array",
         "esri/tasks/FeatureSet",
         "dojo/domReady!"
@@ -17,6 +18,7 @@ require([
         Point,
         Graphic,
         on,
+        lang,
         array,
         FeatureSet
 
@@ -35,6 +37,8 @@ require([
         var APIkeyDublinBike = "cd68da53009a674d943220ef0a67623682aa00ce";
         var data;
         var featureLayer;
+        var stationList = [];
+        var opacity = 0.2;
 
         loadJQ();
 
@@ -147,6 +151,7 @@ require([
 
             var t = [];
 
+
             for (var i = 0 ; i < json.length ; i ++){
 
                 t[i] = {
@@ -164,7 +169,12 @@ require([
                         y: json[i].position.lat
                     }
                 }
+
+                stationList.push([ i, json[i].name, i, t[i].geometry]);
+
             }
+
+            generateStationList(stationList);
 
             jsonFS.features = t;
 
@@ -186,9 +196,13 @@ require([
 
             console.log(featureLayer)
 
+            var u = 0;
+
             on(featureLayer, "graphic-draw", function(e){
 
                 console.log(e.graphic.attributes);
+
+                console.log(stationList)
 
                 e.node.setAttribute("data-name" , e.graphic.attributes.name)
                 e.node.setAttribute("data-bike-stand" , e.graphic.attributes.bikesStands)
@@ -197,7 +211,13 @@ require([
                 e.node.setAttribute("stroke-width",  e.graphic.attributes.bikesStands);
                 e.node.setAttribute("data-timestamp",  e.graphic.attributes.time);
 
-                e.node.setAttribute("stroke-opacity",analyseOpacity(e.graphic.attributes));
+//                e.node.setAttribute("stroke-opacity",analyseOpacity(e.graphic.attributes));
+                e.node.setAttribute("stroke-opacity", opacity);
+
+                if(stationList[u][1] ===  e.graphic.attributes.name){
+                    stationList[u][2] = e.node;
+                }
+                u ++;
 
                 d3.select(e.node).on("click", function(e){
                     d3.event.preventDefault();
@@ -205,6 +225,29 @@ require([
                     displayData(this);
                 });
             });
+        }
+
+        function generateStationList(data){
+            console.log(data)
+            for (var i = 0 ; i < data.length ; i ++){
+                $("#listStation").append("<span rel='" + i + "' class='list'>" + data[i][1].toLowerCase() + "</span>");
+            }
+
+            var $d3 = d3;
+
+            $("#listStation span").on("mouseover" ,  function(e) {
+                console.log(this, $(e.target).attr("rel"), data[$(e.target).attr("rel")][2]);
+                $d3.select(data[$(e.target).attr("rel")][2]).transition().duration(250).attr("stroke-opacity" , 1);
+            }).on("mouseout", function(e){
+                $d3.select(data[$(e.target).attr("rel")][2]).transition().duration(250).attr("stroke-opacity" , opacity);
+            }).on("click", function(e){
+               // alert(data[$(e.target).attr("rel")][3])
+                var geo = data[$(e.target).attr("rel")][3];
+                console.log(geo)
+                map.centerAndZoom(new Point(geo), 18)
+                //map.centerAt(e.target)
+                //map.centerAt(e.target)
+            })
         }
 
         function analyseOpacity(data){
@@ -221,22 +264,16 @@ require([
                 $(".name").html(d3.select(e).attr("data-name"));
                 $(".bikes").html(d3.select(e).attr("data-bike-available") + " Bike(s) free ");
                 $(".stands").html(d3.select(e).attr("data-bike-stands-available") + " Stand(s) free");
-
                 var d = new Date(Number(d3.select(e).attr("data-timestamp")));
-
-
                 $(".time").html("Last update : " + d.getDate() + '/' + (d.getMonth()+1) + '/' + d.getFullYear() + " At " + d.getHours() + "." + d.getMinutes());
             })
         }
 
         var u = 0;
         function generatePie(e){
-//            u ++;
-//            console.log(u)
-//            d3.select(e.node).append("g").attr("id", "toto" + u );
-            var i = d3.select(e).attr("data-bike-available")
-            var v = d3.select(e).attr("data-bike-stands-available")
 
+            var i = d3.select(e).attr("data-bike-available");
+            var v = d3.select(e).attr("data-bike-stands-available");
 
             var chart = c3.generate({
 

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Dublin bikes stations by capacities 4</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css"/>
+
+    <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+
+    <style>
+        body{
+            background-color:#D1D1D1;
+            color: #757575;
+
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Open Sans Condensed', sans-serif;
+            color: #4C4C4C;
+        }
+        h3{
+            border-bottom: 1px dashed #A1A1A1;
+            padding-bottom:15px;
+            margin-bottom:25px;
+
+        }
+
+        #map{
+            border:1px dashed #A1A1A1;
+            height:90%;
+            width:100%;
+        }
+        #dropZone{
+            height:200px;
+        }
+
+        path{
+            fill: none;
+            stroke: #F70019;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        #gradient{
+            height: 15px;
+            width:100%;
+            background: -webkit-linear-gradient(left, rgba(247, 0, 25, 0.9), rgba(247, 0, 25, 0.1));
+            background: -o-linear-gradient(left ,rgba(247, 0, 25, 0.9), rgba(247, 0, 25, 0.1));
+            background: -moz-linear-gradient(left, rgba(247, 0, 25, 0.9), rgba(247, 0, 25, 0.1));
+            background: linear-gradient(to right, rgba(247, 0, 25, 0.9), rgba(247, 0, 25, 0.1));
+
+            margin: 10px 0px 20px 0px;
+
+        }
+        #listCity{
+            background-color: transparent;
+        }
+        #listCity option{
+            background-color: #D1D1D1;
+        }
+        .legend{
+            padding-top: 25px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+    <h1><strong><i class="fa fa-map-o"></i> Mapping projects</strong></h1>
+    <h3>Projects based on mapping technologies</h3>
+
+
+
+
+    <h4>Select a project</h4>
+
+    <div class="col-sm-12">
+        <ul>
+            <li>
+                <a target="_blank" href="http://guillaumeader-web.com/projet_local/esri_interactiveMap/index.html">
+                    <i class="fa fa-map-marker"></i> My Address book - Google Map API v3
+                </a>
+                <p>
+                    <strong>Project realized in May 2014 using Jquery and Google Map API.</strong>
+                    <br/>
+                    This is a simple contact book, all the contact are represnted by a marker and a map.
+                    Once a contact has been selected, you can access their details.
+                </p>
+            </li>
+
+            <li>
+                <a target="_blank" href="http://guillaumeader-web.com/projet_local/colorRampD3js/index_circle2_pieChartC3.html">
+                    <i class="fa fa-globe"></i> Earthquakes around the world (from 1970 to 2009) - Esri ArcGIS API
+                </a>
+                <p>
+                    <strong>Project realized in 2015, using ArcGIS API based on DOJO, JQuery, D3.js and C3,js.</strong>
+                    <br/>
+                    This map represents Earthquakes around the world since 1970 (Magnitude, date)
+                </p>
+            </li>
+            <li>
+                <a target="_blank" href="http://guillaumeader-web.com/projet_local/dublinBike/index2Pie.html">
+                    <i class="fa fa-bicycle"></i> Dublin Bikes (1)
+                </a>
+                <p>
+                    <strong>Project realized in 2015, using ArcGIS API based on DOJO, JQuery, D3.js, C3,js and JCdecaux Bikes API.</strong>
+                    <br/>
+                    Simple representation of the Dublin bikes stations
+                </p>
+            </li>
+            <li>
+                <a target="_blank" href="http://guillaumeader-web.com/projet_local/dublinBike/index3.html">
+                    <i class="fa fa-bicycle"></i> Dublin Bikes (2)
+                </a>
+                <p>
+                    <strong>Project realized in 2015, using ArcGIS API based on DOJO, JQuery, D3.js, C3,js and JCdecaux Bikes API.</strong>
+                    <br/>
+                    Representation of the Dublin bikes stations classified by occupancy.
+                </p>
+            </li>
+            <li>
+                <a target="_blank" href="http://guillaumeader-web.com/projet_local/dublinBike/index4.html">
+                    <i class="fa fa-bicycle"></i> World Bikes stations
+                </a>
+                <p>
+                    <strong>Project realized in 2015, using ArcGIS API based on DOJO, JQuery, D3.js, C3,js and JCdecaux Bikes API.</strong>
+                    <br/>
+                    Representation of bikes stations for various city in the world.
+                </p>
+            </li>
+        </ul>
+
+    </div>
+    <div class="col-sm-8">
+
+    </div>
+
+</div>
+
+
+
+</body>
+</html>

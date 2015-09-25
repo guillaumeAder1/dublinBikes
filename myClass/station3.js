@@ -26,30 +26,19 @@ require([
             center: [-6.265, 53.345],
             zoom: 13,
             basemap: "gray",
-            logo:false, showAttribution:false
+            logo: false,
+            showAttribution: false
         });
-
 
         var APIkeyDublinBike = "cd68da53009a674d943220ef0a67623682aa00ce";
         var data;
+        var featureLayer;
 
-        loadJQ();
+        processData();
 
-        function loadJQ(){
+//        setInterval(function(){processData()} , 30000);
 
-
-            $(document).ready(function(){
-                $.ajax({
-                    type: "GET",
-                    url : "data/Dublin.csv",
-                    datatype: "csv",
-                    success: function(data) {processData(data);}
-                });
-
-            });
-        }
-
-        function processData(d) {
+        function processData() {
 
             $.ajax({
                 type: "GET",
@@ -57,13 +46,15 @@ require([
                 datatype: "json",
                 success: function(d){ getRealTimeData(d)},
                 error: function(e){console.log("error request JCdecaux API Data")}
-
             })
-
         }
 
         function getRealTimeData(json){
-console.log(json)
+            console.log(json)
+            if(featureLayer){
+                featureLayer.clear();
+                map.removeLayer(featureLayer);
+            }
             var layerDefinition = {
                 "displayFieldName": "Name",
                 "geometryType": "esriGeometryPoint",
@@ -136,7 +127,7 @@ console.log(json)
                 featureSet: fs
             };
 
-            var featureLayer = new FeatureLayer(featureCollection, {
+            featureLayer = new FeatureLayer(featureCollection, {
                 id:"featureJSON",
                 styling:false
 

@@ -169,7 +169,7 @@ console.log(json)
 
                 d3.select(e.node).on("mouseout", function(){
                     d3.select(this).transition().duration(250).attr("stroke-opacity" , 0.2);
-                })
+                });
             });
         }
         function displayData(e){
