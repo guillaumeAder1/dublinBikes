@@ -46,6 +46,17 @@ require([
 
 
             $(document).ready(function(){
+
+                $("#legend").hide();
+                $("#menu span").on("click", function(e){
+
+                    if($("#legend").is(":hidden")){
+                        $("#legend").slideDown("slow");
+                    }else {
+                        $("#legend").slideUp("slow");
+                    }
+
+                })
                 $.ajax({
                     type: "GET",
                     url : "data/Dublin.csv",
@@ -150,6 +161,7 @@ require([
             };
 
             var t = [];
+            stationList = [];
 
 
             for (var i = 0 ; i < json.length ; i ++){
@@ -194,15 +206,9 @@ require([
             });
             map.addLayer(featureLayer);
 
-            console.log(featureLayer)
-
             var u = 0;
 
             on(featureLayer, "graphic-draw", function(e){
-
-                console.log(e.graphic.attributes);
-
-                console.log(stationList)
 
                 e.node.setAttribute("data-name" , e.graphic.attributes.name)
                 e.node.setAttribute("data-bike-stand" , e.graphic.attributes.bikesStands)
@@ -228,7 +234,7 @@ require([
         }
 
         function generateStationList(data){
-            console.log(data)
+            $("#listStation").empty();
             for (var i = 0 ; i < data.length ; i ++){
                 $("#listStation").append("<span rel='" + i + "' class='list'>" + data[i][1].toLowerCase() + "</span>");
             }
@@ -243,8 +249,13 @@ require([
             }).on("click", function(e){
                // alert(data[$(e.target).attr("rel")][3])
                 var geo = data[$(e.target).attr("rel")][3];
-                console.log(geo)
-                map.centerAndZoom(new Point(geo), 18)
+
+                map.centerAndZoom(new Point(geo), 18);
+                $d3.selectAll("path").attr("stroke-opacity" , opacity);
+                $d3.select(data[$(e.target).attr("rel")][2]).transition().duration(250).attr("stroke-opacity" , 1);
+
+                generatePie(data[$(e.target).attr("rel")][2]);
+                displayData(data[$(e.target).attr("rel")][2]);
                 //map.centerAt(e.target)
                 //map.centerAt(e.target)
             })

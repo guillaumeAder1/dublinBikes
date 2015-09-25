@@ -2,7 +2,7 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
-    <title>Dublin bikes stations by capacities 4</title>
+    <title>World bikes stations by capacities </title>
     <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css"/>
 
     <script type="text/javascript">
@@ -29,9 +29,33 @@
     <script src="http://js.arcgis.com/3.14/"></script>
 
     <style>
+
+        html{
+            height:100%;
+
+        }
         body{
             background-color:#D1D1D1;
             color: #757575;
+            height:100%;
+            background-color:#D1D1D1;
+
+        }
+
+        #header{
+            left: 0px;
+            top: 0px;
+            right: 0px;
+            bottom: auto;
+            width: auto;
+            height: 150px;
+            padding: 0px;
+            z-index: 9999;
+            position: absolute;
+            background-color:#D1D1D1;
+            -webkit-box-shadow: -1px 9px 18px 0px rgba(0,0,0,0.55);
+            -moz-box-shadow: -1px 9px 18px 0px rgba(0,0,0,0.55);
+            box-shadow: -1px 9px 18px 0px rgba(0,0,0,0.55);
 
         }
         h1, h2, h3, h4, h5, h6 {
@@ -44,14 +68,28 @@
             margin-bottom:25px;
 
         }
+        #main{
+            width: 100%;
+            height: 100%;
+            position: absolute;
+        }
 
         #map{
+            position: absolute;
+            overflow: hidden;
+            min-width: 1px;
+            min-height: 1px;
+            left: 0px;
+            top: 40px;
+            right: 0px;
+            bottom: 0px;
+            width: auto;
+            height: auto;
+            padding: 0px;
+            z-index: auto;
+            background-color:#D1D1D1;
             border:1px dashed #A1A1A1;
-            height:90%;
-            width:100%;
-            -webkit-box-shadow: -1px 9px 18px 0px rgba(0,0,0,0.55);
-            -moz-box-shadow: -1px 9px 18px 0px rgba(0,0,0,0.55);
-            box-shadow: -1px 9px 18px 0px rgba(0,0,0,0.55);
+
         }
         #dropZone{
             height:200px;
@@ -71,7 +109,6 @@
             background: -o-linear-gradient(left ,rgba(247, 0, 25, 0.9), rgba(247, 0, 25, 0.1));
             background: -moz-linear-gradient(left, rgba(247, 0, 25, 0.9), rgba(247, 0, 25, 0.1));
             background: linear-gradient(to right, rgba(247, 0, 25, 0.9), rgba(247, 0, 25, 0.1));
-
             margin: 10px 0px 20px 0px;
 
         }
@@ -84,7 +121,8 @@
 
         }
         #listStation{
-            height:250px;
+            position:relative;
+            height:400px;
             overflow-y: auto ;
 
         }
@@ -100,9 +138,50 @@
             color: #e5e5e5;
         }
 
+        #legend{
+            z-index:888;
+            position: absolute;
+            background-color:#D1D1D1;
+            top:150px;
+            right: 0px;
+            left:auto;
+            bottom: 0px;
+            border:1px dashed #A1A1A1;
+        }
+
+        #legend .panel{
+            position:relative;
+            height:100%;
+            background-color: transparent;
+        }
+
 
         .legend{
             padding-top: 25px;
+        }
+
+        #menu{
+            color: #4C4C4C;
+            font-size:20px;
+            z-index:9999;
+            position:absolute;
+            bottom:0;
+            right:0;
+        }
+
+        #menu .icon{
+            text-align: center;
+            vertical-align: middle;
+            padding:9px;
+            background-color:#D1D1D1;
+            margin: 0px 10px;
+            position:relative;
+            float:right;
+            width:40px;
+            height:40px;
+            -webkit-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
+            -moz-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
+            box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
         }
 
     </style>
@@ -112,43 +191,76 @@
 
 <body>
 
-<div class="container">
-    <h1><strong><i class="fa fa-bicycle"></i> World bikes Station</strong></h1>
-    <h3>Bikes stations capacities (4)</h3>
-    Station opacity represents bikes occupancy
+<div id="main">
 
-    <div class="legend">
-        <span class="text-left">100% bikes available</span>
-        <span style="float:right;" class="text-right">0% bikes available</span>
+    <div id="map">
+        <!--<div class="icon"></div>-->
+        <!--<div class="icon"></div>-->
+
     </div>
 
-    <div id="gradient"></div>
-</div>
+    <div id="header" class="container">
+        <div class="container">
+            <h1><strong><i class="fa fa-bicycle"></i> World bikes Station</strong></h1>
+            <h3>Bikes stations capacities (4)</h3>
+            Station opacity represents bikes occupancy
 
+            <div id="menu">
+                <span title="Analysis" class="icon"><i class="fa fa-pie-chart"></i></span>
+                <span title="Select a city" class="icon"><i class="fa fa-globe"></i></span>
+                <span title="See legend" class="icon"><i class="fa fa-list-ul"></i></span>
+            </div>
 
+        </div>
+    </div>
 
-    <div id="map"></div>
+    <div id="legend" class="col-md-3 col-xs-12">
 
-
-<div>
-
-    <div class="container">
-
-        <div class="col-sm-6">
+        <div class="panel">
             <h3>Select a City</h3>
             <form>
                 <select id="listCity">
                 </select>
             </form>
+            <h3>Select a Station</h3>
+            <div id="listStation">
+
+            </div>
         </div>
 
-        <div class="col-sm-6">
+        <!--<div class="legend">-->
+            <!--<span class="text-left">100% bikes available</span>-->
+            <!--<span style="float:right;" class="text-right">0% bikes available</span>-->
+        <!--</div>-->
+        <!--<div id="gradient"></div>-->
+    </div>
+
+
+
+
+
+</div>
+
+
+<div style="display:none;">
+
+    <div class="container">
+
+        <!--<div class="col-sm-6">-->
+            <h3>Select a City</h3>
+            <form>
+                <select id="listCity">
+                </select>
+            </form>
+        <!--</div>-->
+
+        <!--<div class="col-sm-6">-->
             <h3>Select a Station</h3>
             <div id="listStation">
 
             </div>
 
-        </div>
+        <!--</div>-->
 
         <h3>Click on a bike station</h3>
 
