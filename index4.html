@@ -32,6 +32,7 @@
 
         html{
             height:100%;
+            overflow:hidden;
 
         }
         body{
@@ -155,7 +156,6 @@
             background-color: transparent;
         }
 
-
         .legend{
             padding-top: 25px;
         }
@@ -194,8 +194,6 @@
 <div id="main">
 
     <div id="map">
-        <!--<div class="icon"></div>-->
-        <!--<div class="icon"></div>-->
 
     </div>
 
@@ -203,7 +201,7 @@
         <div class="container">
             <h1><strong><i class="fa fa-bicycle"></i> World bikes Station</strong></h1>
             <h3>Bikes stations capacities (4)</h3>
-            Station opacity represents bikes occupancy
+
 
             <div id="menu">
                 <span title="Analysis" class="icon"><i class="fa fa-pie-chart"></i></span>
@@ -216,7 +214,21 @@
 
     <div id="legend" class="col-md-3 col-xs-12">
 
-        <div class="panel">
+        <div id="fa-pie-chart" class="panel">
+            <h3>Click on a bike station</h3>
+
+            <div>
+                <h4 ><i class="fa fa-bars"></i>  <span class="name">STATION NAME </span></h4>
+                <h4 class="bikes"></h4>
+                <h4 class="stands"></h4>
+                <h4 class="time"></h4>
+            </div>
+            <div >
+                <h4 ><i class="fa fa-pie-chart"></i> OCCUPANCY </h4>
+                <div id="ipo" ></div>
+            </div>
+        </div>
+        <div id="fa-globe" class="panel">
             <h3>Select a City</h3>
             <form>
                 <select id="listCity">
@@ -227,6 +239,13 @@
 
             </div>
         </div>
+        <div id="fa-list-ul" class="panel">
+            <div class="legend">
+                <span class="text-left">100% bikes available</span>
+                <span style="float:right;" class="text-right">0% bikes available</span>
+            </div>
+            <div id="gradient"></div>
+        </div>
 
         <!--<div class="legend">-->
             <!--<span class="text-left">100% bikes available</span>-->
@@ -234,33 +253,28 @@
         <!--</div>-->
         <!--<div id="gradient"></div>-->
     </div>
-
-
-
-
-
 </div>
 
 
 <div style="display:none;">
 
+
+
+
+
     <div class="container">
 
-        <!--<div class="col-sm-6">-->
+
             <h3>Select a City</h3>
             <form>
                 <select id="listCity">
                 </select>
             </form>
-        <!--</div>-->
 
-        <!--<div class="col-sm-6">-->
             <h3>Select a Station</h3>
             <div id="listStation">
 
             </div>
-
-        <!--</div>-->
 
         <h3>Click on a bike station</h3>
 

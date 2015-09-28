@@ -47,14 +47,36 @@ require([
 
             $(document).ready(function(){
 
+                var selectedPanel = [];
+
                 $("#legend").hide();
                 $("#menu span").on("click", function(e){
 
-                    if($("#legend").is(":hidden")){
-                        $("#legend").slideDown("slow");
-                    }else {
-                        $("#legend").slideUp("slow");
+                    $(".panel").css("display" , "none");
+
+                    var _id = $(this).find("i").attr("class").substr(3);
+
+                    selectedPanel.push(_id);
+
+                    if(selectedPanel.length > 2){
+                        selectedPanel.shift();
                     }
+                    console.log(selectedPanel[0], selectedPanel[1])
+
+                    //$("#legend").empty();
+                    $("#legend").find($("#" + _id)).css("display" , "block");
+                    console.log($("#" + _id));
+
+                    if(selectedPanel[0] === selectedPanel[1]){
+                        if($("#legend").is(":hidden")){
+                            $("#legend").slideDown("slow");
+                        }else {
+                            $("#legend").slideUp("slow");
+                        }
+                    }
+
+
+
 
                 })
                 $.ajax({
@@ -206,7 +228,7 @@ require([
             });
             map.addLayer(featureLayer);
 
-            var u = 0;
+           // var u = 0;
 
             on(featureLayer, "graphic-draw", function(e){
 
@@ -220,10 +242,19 @@ require([
 //                e.node.setAttribute("stroke-opacity",analyseOpacity(e.graphic.attributes));
                 e.node.setAttribute("stroke-opacity", opacity);
 
-                if(stationList[u][1] ===  e.graphic.attributes.name){
-                    stationList[u][2] = e.node;
+                for (var i = 0 ; i < stationList.length ; i ++){
+                    if(stationList[i][1] ===  e.graphic.attributes.name) {
+                        stationList[i][2] = e.node;
+                    }
                 }
-                u ++;
+
+                d3.select(e.node).on("mouseover", function(){
+                    d3.select(this).transition().duration(500).attr("stroke-opacity" , 0.8)
+                });
+
+                d3.select(e.node).on("mouseout", function(){
+                    d3.select(this).transition().duration(250).attr("stroke-opacity" , 0.2);
+                });
 
                 d3.select(e.node).on("click", function(e){
                     d3.event.preventDefault();
