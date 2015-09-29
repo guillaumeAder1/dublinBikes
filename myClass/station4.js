@@ -67,13 +67,15 @@ require([
                     $("#legend").find($("#" + _id)).css("display" , "block");
                     console.log($("#" + _id));
 
-                    if(selectedPanel[0] === selectedPanel[1]){
+                    //if(selectedPanel[0] === selectedPanel[1]){
                         if($("#legend").is(":hidden")){
                             $("#legend").slideDown("slow");
                         }else {
-                            $("#legend").slideUp("slow");
+                            if(selectedPanel[0] === selectedPanel[1]) {
+                                $("#legend").slideUp("slow");
+                            }
                         }
-                    }
+                    //}
 
 
 
