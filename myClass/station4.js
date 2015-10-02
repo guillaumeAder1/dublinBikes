@@ -1,6 +1,8 @@
 require([
         "esri/map",
         "esri/layers/FeatureLayer",
+        "esri/geometry/Extent",
+        "esri/SpatialReference",
         "esri/request",
         "esri/geometry/Point",
         "esri/graphic",
@@ -14,6 +16,8 @@ require([
     function(
         Map,
         FeatureLayer,
+        Extent,
+        SpatialReference,
         request,
         Point,
         Graphic,
@@ -39,6 +43,8 @@ require([
         var featureLayer;
         var stationList = [];
         var opacity = 0.2;
+        var lng = [];
+        var lat = [];
 
         loadJQ();
 
@@ -186,7 +192,9 @@ require([
 
             var t = [];
             stationList = [];
-
+            lng = [];
+            lat = [];
+            
 
             for (var i = 0 ; i < json.length ; i ++){
 
@@ -207,8 +215,12 @@ require([
                 }
 
                 stationList.push([ i, json[i].name, i, t[i].geometry]);
-
+                lng.push(json[i].position.lng);
+                lat.push(json[i].position.lat);
             }
+           
+
+            //console.log(json.position.lng.max(), json.position.lng.min(), json.position.lat.max(), json.position.lat.min)
 
             generateStationList(stationList);
 
@@ -273,6 +285,8 @@ require([
             }
 
             var $d3 = d3;
+
+            map.setExtent(new Extent(lng.min(), lat.min(), lng.max(), lat.max(), new SpatialReference({ wkid: 4326 })));
 
             $("#listStation span").on("mouseover" ,  function(e) {
                 console.log(this, $(e.target).attr("rel"), data[$(e.target).attr("rel")][2]);
@@ -352,4 +366,14 @@ require([
             })
 
         }
+
+        // Utils
+        Array.prototype.max = function () {
+            return Math.max.apply(null, this);
+        };
+
+        Array.prototype.min = function () {
+            return Math.min.apply(null, this);
+        };
+
     });
